@@ -1,5 +1,5 @@
-#ifndef C_LABS_SYMBOL_H
-#define C_LABS_SYMBOL_H
+#ifndef LW_SYMBOL_H
+#define LW_SYMBOL_H
 
 
 enum OperationType {
@@ -30,4 +30,4 @@ typedef struct {
 } Symbol;
 
 
-#endif //C_LABS_SYMBOL_H
+#endif //LW_SYMBOL_H

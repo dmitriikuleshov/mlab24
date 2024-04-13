@@ -15,7 +15,7 @@ struct StackItem* top(Stack* s) {
 }
 
 
-int insert_stack(Stack* s, Symbol value) {
+int put_in_stack(Stack* s, Symbol value) {
     struct StackItem* item = (struct StackItem*)malloc(sizeof(struct StackItem));
 	if (!item) return -1;
     item->value = value;

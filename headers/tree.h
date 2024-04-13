@@ -1,5 +1,5 @@
-#ifndef C_LABS_TREE_H
-#define C_LABS_TREE_H
+#ifndef LW_TREE_H
+#define LW_TREE_H
 #include "../headers/symbol.h"
 
 
@@ -29,4 +29,4 @@ struct Item* create_item(double operand, char variable, enum OperationType opera
 Tree* create_tree();
 void destroy_tree(Tree* tree); struct Item* deep_copy(struct Item* item);
 
-#endif //C_LABS_TREE_H
+#endif //LW_TREE_H

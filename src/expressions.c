@@ -158,7 +158,7 @@ int handle_right_br(Stack *st, Stack *rev) {
 			return 0;
 		}
 		pop_stack(st);
-		insert_stack(rev, t->value);
+		put_in_stack(rev, t->value);
 	}
 }
 
@@ -174,7 +174,7 @@ void handle_operation(Stack *s, Stack *rev, Symbol *t) {
 			(get_assoc(cur_t->value.operation) == ASSOC_LEFT && operation_priority(t->operation) <= operation_priority(cur_t->value.operation)) ||
 			(get_assoc(cur_t->value.operation) == ASSOC_RIGHT && operation_priority(t->operation) < operation_priority(cur_t->value.operation))) {
 			pop_stack(s);
-			insert_stack(rev, cur_t->value);
+			put_in_stack(rev, cur_t->value);
 		} else {
 			return;
 		}
@@ -345,27 +345,26 @@ int input(Stack *stack, Stack *rev, Tree *tree) {
 	printf("Enter expression: ");
 	while (get_symbol(&s, &st) != -1)
 	{
-		switch (s.type)
-		{
-		case NONE:
-			printf("Char not recognized\n");
-			break;
-		case NUMBER:
-		case VARIABLE:
-			insert_stack(rev, s);
-			break;
-		case OPERATION:
-			handle_operation(stack, rev, &s);
-			insert_stack(stack, s);
-			break;
-		case LEFT_BR:
-			insert_stack(stack, s);
-			break;
-		case RIGHT_BR:
-			if (handle_right_br(stack, rev) == -1) {
-				return -1;
-			}
-			break;
+		switch (s.type) {
+			case NONE:
+				printf("Char not recognized\n");
+				break;
+			case NUMBER:
+			case VARIABLE:
+				put_in_stack(rev, s);
+				break;
+			case OPERATION:
+				handle_operation(stack, rev, &s);
+				put_in_stack(stack, s);
+				break;
+			case LEFT_BR:
+				put_in_stack(stack, s);
+				break;
+			case RIGHT_BR:
+				if (handle_right_br(stack, rev) == -1) {
+					return -1;
+				}
+				break;
 		}
 	}
 	while (stack->size != 0) {
@@ -374,7 +373,7 @@ int input(Stack *stack, Stack *rev, Tree *tree) {
 			printf("Error: no pair for bracket");
 			return -1;
 		}
-		insert_stack(rev, s);
+		put_in_stack(rev, s);
 		pop_stack(stack);
 	}
 	while (rev->size != 0)
@@ -400,32 +399,32 @@ void print_commands() {
 }
 
 
-int handle_input(int flag, Stack *stack, Stack *rev, Tree *tree) {
-	switch (flag) {
-	case 1:
-		if (input(stack, rev, tree) == -1)
-			return -1;
-		break;
-	case 2:
-		printTree(tree);
-		break;
-	case 3:
-		if (transform(tree) == -1)
-			return -1;
-		break;
-	case 4:
-		print_expr(tree);
-		break;
-	default:
-		print_commands();
-		break;
+int handle_input(int option, Stack *stack, Stack *rev, Tree *tree) {
+	switch (option) {
+		case 1:
+			if (input(stack, rev, tree) == -1)
+				return -1;
+			break;
+		case 2:
+			printTree(tree);
+			break;
+		case 3:
+			if (transform(tree) == -1)
+				return -1;
+			break;
+		case 4:
+			print_expr(tree);
+			break;
+		default:
+			print_commands();
+			break;
 	}
 	return 0;
 }
 
 
-int input_flag(int *flag) {
-	int is_eof = scanf("%d", flag);
+int input_option(int *option) {
+	int is_eof = scanf("%d", option);
 	char t;
 	scanf("%c", &t);
 	return is_eof;
@@ -440,13 +439,12 @@ int main() {
 	Tree *tree = create_tree();
 	if (!tree)
 		return -1;
-	int flag;
+	int option;
 	print_commands();
-	printf("Enter option: ");
-	while ((input_flag(&flag)) != EOF)
-	{
-		handle_input(flag, stack, rev, tree);
-		printf("Enter option: ");
+	printf("Enter command: ");
+	while ((input_option(&option)) != EOF) {
+		handle_input(option, stack, rev, tree);
+		printf("Enter command: ");
 	}
 	destroy_stack(stack);
 	destroy_tree(tree);
