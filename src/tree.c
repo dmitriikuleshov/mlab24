@@ -23,20 +23,16 @@ Tree* create_tree() {
 }
 
 
-void destroy_item(struct Item* item){
-    if (!item->l && !item->r) return;
-    if (item->l) {
-        destroy_item(item->l);
-        struct Item* itemPtr = item->l;
-        item->l = NULL;
-        free(itemPtr);
-    }
-    if (item->r) {
-        destroy_item(item->r);
-        struct Item* itemPtr = item->r;
-        item->r = NULL;
-        free(itemPtr);
-    }
+void destroy_item(struct Item* item, Tree* tree) {
+    if (!item) return;
+
+    // Рекурсивно освобождаем память для левого и правого поддеревьев
+    destroy_item(item->l, tree);
+    destroy_item(item->r, tree);
+
+    // Освобождаем память для самого узла
+    if (item != tree->root)
+        free(item);
 }
 
 
@@ -56,7 +52,10 @@ struct Item* deep_copy(struct Item* item) {
 
 
 void destroy_tree(Tree* tree){
-    if (!tree->root) return;
-    destroy_item(tree->root);
-    tree->root = NULL;
+	if (!tree) {
+		return;
+	}
+
+    destroy_item(tree->root, tree);
+    free(tree->root);
 }

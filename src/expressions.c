@@ -157,8 +157,8 @@ int handle_right_br(Stack *st, Stack *rev) {
 			pop_stack(st);
 			return 0;
 		}
-		pop_stack(st);
 		put_in_stack(rev, t->value);
+		pop_stack(st);
 	}
 }
 
@@ -173,8 +173,8 @@ void handle_operation(Stack *s, Stack *rev, Symbol *t) {
 		if (
 			(get_assoc(cur_t->value.operation) == ASSOC_LEFT && operation_priority(t->operation) <= operation_priority(cur_t->value.operation)) ||
 			(get_assoc(cur_t->value.operation) == ASSOC_RIGHT && operation_priority(t->operation) < operation_priority(cur_t->value.operation))) {
-			pop_stack(s);
 			put_in_stack(rev, cur_t->value);
+			pop_stack(s);
 		} else {
 			return;
 		}
@@ -257,6 +257,7 @@ int transformItem(struct Item *item) {
 			multItem1->l = item->r;
 			multItem2->r = item->l->l;
 			multItem2->l = deep_copy(item->r);
+			free(item->l); // fixed
 			item->r = multItem1;
 			item->l = multItem2;
 			transformItem(item->l);
@@ -275,6 +276,7 @@ int transformItem(struct Item *item) {
 			multItem1->l = item->l;
 			multItem2->r = item->r->l;
 			multItem2->l = item->l;
+			free(item->r); // fixed
 			item->r = multItem1;
 			item->l = multItem2;
 			transformItem(item->r);
@@ -396,6 +398,7 @@ void print_commands() {
 	printf("\t2 - Print tree\n");
 	printf("\t3 - Transform tree\n");
 	printf("\t4 - Print expression\n");
+	printf("\t5 - exit\n");
 }
 
 
@@ -415,6 +418,12 @@ int handle_input(int option, Stack *stack, Stack *rev, Tree *tree) {
 		case 4:
 			print_expr(tree);
 			break;
+		case 5:
+			destroy_stack(stack);
+			destroy_stack(rev);
+			destroy_tree(tree);
+			free(tree);
+			exit(0);
 		default:
 			print_commands();
 			break;
@@ -446,6 +455,4 @@ int main() {
 		handle_input(option, stack, rev, tree);
 		printf("Enter command: ");
 	}
-	destroy_stack(stack);
-	destroy_tree(tree);
 }

@@ -4,13 +4,15 @@
 
 int pop_stack(Stack* s) {
     if (s->size == 0) return -1;
+	StackItem* tmp = s->back;
     s->back = s->back->pr;
+	free(tmp);
     s->size--;
     return 0;
 }
 
 
-struct StackItem* top(Stack* s) {
+StackItem* top(Stack* s) {
     return s->back;
 }
 
@@ -34,11 +36,17 @@ Stack* create_stack() {
     return stack;
 }
 
+void destroy_stack_item(StackItem* stack_item){
+	free(stack_item->pr);
+	free(&stack_item->value);
+	free(stack_item);
+}
 
 void destroy_stack(Stack* stack) {
     while (stack->size){
-        struct StackItem* t = top(stack);
+        // struct StackItem* t = top(stack);
         pop_stack(stack);
-        free(t);
+        // free(t);
     }
+	free(stack);
 }

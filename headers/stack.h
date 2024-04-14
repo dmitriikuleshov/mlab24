@@ -3,10 +3,10 @@
 #include "../headers/symbol.h" 
 
 
-struct StackItem {
+typedef struct StackItem {
     Symbol value;
     struct StackItem* pr;
-};
+} StackItem;
 
 
 typedef struct  {
@@ -15,6 +15,7 @@ typedef struct  {
 } Stack;
 
 
+void destroy_stack_item(StackItem* stack_item);
 int pop_stack(Stack* s);
 struct StackItem* top(Stack* s);
 int put_in_stack(Stack* s, Symbol value);
