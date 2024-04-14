@@ -23,31 +23,15 @@ Tree* create_tree() {
 }
 
 
-void destroy_item(struct Item* item, Tree* tree) {
+void destroy_item(struct Item* item) {
     if (!item) return;
 
     // Рекурсивно освобождаем память для левого и правого поддеревьев
-    destroy_item(item->l, tree);
-    destroy_item(item->r, tree);
+    destroy_item(item->l);
+    destroy_item(item->r);
 
     // Освобождаем память для самого узла
-    if (item != tree->root)
-        free(item);
-}
-
-
-struct Item* deep_copy(struct Item* item) {     
-	struct Item* copy = malloc(sizeof (*item->r));     
-	memcpy(copy, item, sizeof (*item));
-    if (item->r){
-        struct Item* copy_r = deep_copy(item->r);
-		copy->r = copy_r;
-    }
-    if (item->l){
-        struct Item* copy_l = deep_copy(item->l);
-		copy->l = copy_l;
-    }
-    return copy;
+    free(item);
 }
 
 
@@ -56,6 +40,24 @@ void destroy_tree(Tree* tree){
 		return;
 	}
 
-    destroy_item(tree->root, tree);
-    free(tree->root);
+    destroy_item(tree->root);
 }
+
+
+struct Item* deep_copy(struct Item* item) {     
+	struct Item* copy = malloc(sizeof (*item->r));     
+	memcpy(copy, item, sizeof (*item));
+    copy->l=NULL;
+    copy->r=NULL;
+    if (item->r){
+        struct Item* copy_r = deep_copy(item->r);
+		copy->r = copy_r;
+    }
+    if (item->l) {
+        struct Item* copy_l = deep_copy(item->l);
+		copy->l = copy_l;
+    }
+    return copy;
+}
+
+

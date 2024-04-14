@@ -275,7 +275,7 @@ int transformItem(struct Item *item) {
 			multItem1->r = item->r->r;
 			multItem1->l = item->l;
 			multItem2->r = item->r->l;
-			multItem2->l = item->l;
+			multItem2->l = deep_copy(item->l);
 			free(item->r); // fixed
 			item->r = multItem1;
 			item->l = multItem2;
@@ -419,11 +419,12 @@ int handle_input(int option, Stack *stack, Stack *rev, Tree *tree) {
 			print_expr(tree);
 			break;
 		case 5:
+			destroy_tree(tree);
 			destroy_stack(stack);
 			destroy_stack(rev);
-			destroy_tree(tree);
 			free(tree);
 			exit(0);
+			break;
 		default:
 			print_commands();
 			break;
