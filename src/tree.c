@@ -41,6 +41,7 @@ void destroy_tree(Tree* tree){
 	}
 
     destroy_item(tree->root);
+    free(tree);
 }
 
 

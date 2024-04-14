@@ -331,8 +331,7 @@ void print_expr_item(struct Item *item) {
 }
 
 
-void print_expr(Tree *tree)
-{
+void print_expr(Tree *tree) {
 	if (!tree->root)
 		return;
 	print_expr_item(tree->root);
@@ -372,7 +371,7 @@ int input(Stack *stack, Stack *rev, Tree *tree) {
 	while (stack->size != 0) {
 		s = top(stack)->value;
 		if (s.type == LEFT_BR) {
-			printf("Error: no pair for bracket");
+			printf("Error: no pair for bracket\n");
 			return -1;
 		}
 		put_in_stack(rev, s);
@@ -395,9 +394,9 @@ int input(Stack *stack, Stack *rev, Tree *tree) {
 void print_commands() {
 	printf("Commands: \n");
 	printf("\t1 - Input an expression\n");
-	printf("\t2 - Print tree\n");
+	printf("\t2 - Show tree\n");
 	printf("\t3 - Transform tree\n");
-	printf("\t4 - Print expression\n");
+	printf("\t4 - Show expression\n");
 	printf("\t5 - exit\n");
 }
 
@@ -422,7 +421,6 @@ int handle_input(int option, Stack *stack, Stack *rev, Tree *tree) {
 			destroy_tree(tree);
 			destroy_stack(stack);
 			destroy_stack(rev);
-			free(tree);
 			exit(0);
 			break;
 		default:
@@ -442,12 +440,12 @@ int input_option(int *option) {
 
 
 int main() {
+	Tree *tree = create_tree();
+	if (!tree)
+		return -1;
 	Stack *stack = create_stack();
 	Stack *rev = create_stack();
 	if (!stack || !rev)
-		return -1;
-	Tree *tree = create_tree();
-	if (!tree)
 		return -1;
 	int option;
 	print_commands();
